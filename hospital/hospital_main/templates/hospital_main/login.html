@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+{% block content %}
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        Login: <input type="text" name="log"><br><br>
+        Hasło: <input type="text" name="pass"><br><br>
+        <a href="{% url 'hospital_main:home' %}">Wróć</a>
+        <input type="submit" value="Zaloguj">
+
+    </form>
+    <br><br>
+    
+    
+</body>
+{% endblock %}
+</html>

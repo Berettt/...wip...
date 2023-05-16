@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% if user.is_authenticated %}
+    Are you sure you want to log out?
+    <form method="post">
+        <input type="submit" value="TAK">
+        <a href="{% url 'hospital_main:home' %}">NIE</a>  
+        {% csrf_token %}
+    {% else %}
+        <h3>Nie jesteś zalogowany!</h3>
+        <a href="{% url 'hospital_main:login' %}">Zaloguj</a> 
+    </form>
+    {% endif %}
+</head>
+<body>
+    
+</body>
+</html>

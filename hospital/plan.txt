@@ -1,0 +1,80 @@
+strona szpitalu z logowaniem, permisjami, umawianie wizyt z kalnedarzem, wgląd w wizyty
+1.logowanie
+2.panel klienta
+3.panel lekarza
+4.permisje
+
+
+
+ login
+
+
+ class Home(View):
+
+    def get(self,request):
+
+        return render(request,'hospital_main/home.html')
+    
+class LoginView(FormView):
+    form_class = LoginForm  # update form attribute to form_class
+    template_name = 'hospital_main\login.html'
+    success_url = reverse_lazy('hospital_main:home')
+
+    def get(self,request):
+        if request.user.is_authenticated:
+            return redirect(self.success_url)
+
+        form = self.form_class()  # use self.form_class to create the form instance
+        context = {'form':form}
+
+        return render(request,self.template_name,context)
+    
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['haslo']
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            login(self.request, user)
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, 'Niepoprawny e-mail lub hasło.')
+            return self.form_invalid(form)
+        
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid email or password')
+        return super().form_invalid(form)
+    
+class RegisterView(CreateView):
+
+    form = RegisterForm()
+    template_name = r"hospital_main\register.html"
+    success_url = reverse_lazy('hospital_main:home')
+
+    def get(self,request):
+        form = RegisterForm()
+        context = {'form':form}
+
+        return render(request,self.template_name,context)
+    
+    def post(self, request):
+
+        form = RegisterForm(request.POST)
+        context = {'form':form}
+        if form.is_valid():
+            form.save()
+            return redirect(self.success_url)
+        return render(request,self.template_name,context)
+
+class Logout(View):
+   template_name = 'hospital_main\logout.html'
+   success_url = reverse_lazy('hospital_main:login')
+   def get(self,request):
+       return render(request,self.template_name)
+   def post(self,request):
+       if request.user.is_authenticated:
+            logout(request)
+            return redirect(reverse_lazy('hospital_main:login'))
+       else:
+        return render(request,self.template_name)
+
+zorientować się czemu klasowy custom sposob rejestracji i logowania nie działa
